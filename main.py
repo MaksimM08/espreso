@@ -11,7 +11,6 @@ class Suprematism(QWidget):
         self.x = 0
         self.y = 0
         self.size = 0
-        self.color = QColor(255, 219, 139)
         self.initUI()
 
     def initUI(self):
@@ -26,7 +25,6 @@ class Suprematism(QWidget):
         if self.do_paint:
             qp = QPainter()
             qp.begin(self)
-            qp.setBrush(self.color)
             self.draw(qp)
 
     def paint(self):
@@ -38,6 +36,7 @@ class Suprematism(QWidget):
             self.size = random.randint(20, 201)
             self.x = random.randint(0, 601)
             self.y = random.randint(0, 601)
+            qp.setBrush(QColor(random.randint(0, 256), random.randint(0, 256), random.randint(0, 256)))
             qp.drawEllipse(int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size)
 
 
