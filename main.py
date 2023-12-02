@@ -1,43 +1,32 @@
 import sys
-import random
-from PyQt5.QtGui import QColor, QPainter
-from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QPushButton
+import sqlite3
+from PyQt5.QtWidgets import QWidget, QApplication, QTableWidgetItem, QTableWidget
 
 
 class Suprematism(QWidget):
     def __init__(self):
         super().__init__()
-        self.buton = ''
-        self.x = 0
-        self.y = 0
-        self.size = 0
         self.initUI()
 
     def initUI(self):
         self.setGeometry(600, 600, 600, 600)
         self.setWindowTitle('Супрематизм')
-        self.do_paint = False
-        self.btn = QPushButton('кнопка', self)
-        self.btn.setGeometry(140, 50, 60, 20)
-        self.btn.clicked.connect(self.paint)
 
-    def paintEvent(self, event):
-        if self.do_paint:
-            qp = QPainter()
-            qp.begin(self)
-            self.draw(qp)
+        con = sqlite3.connect("coffee.sqlite")
+        cur = con.cursor()
+        result = cur.execute("""SELECT * FROM coffee
+                    WHERE id > 0 """).fetchall()
+        self.tableWidget = QTableWidget(self)
+        self.tableWidget.setColumnCount(6)
+        self.tableWidget.setHorizontalHeaderLabels(['ID', 'название сорта', 'степень обжарки', 'молотый/в зернах', 'описание вкуса', 'цена', 'объем упаковки'])
+        self.tableWidget.setRowCount(0)
+        for i, row in enumerate(result):
+            self.tableWidget.setRowCount(
+            self.tableWidget.rowCount() + 1)
+        for j, elem in enumerate(row):
+            self.tableWidget.setItem(
+                i, j, QTableWidgetItem(str(elem)))
 
-    def paint(self):
-        self.do_paint = True
-        self.repaint()
-
-    def draw(self, qp):
-        for i in range(10):
-            self.size = random.randint(20, 201)
-            self.x = random.randint(0, 601)
-            self.y = random.randint(0, 601)
-            qp.setBrush(QColor(random.randint(0, 256), random.randint(0, 256), random.randint(0, 256)))
-            qp.drawEllipse(int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size)
 
 
 if __name__ == '__main__':
